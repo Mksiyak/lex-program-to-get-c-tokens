@@ -1,4 +1,5 @@
 %option noyywrap
+
 %{
 #include <stdio.h>
 int countKeywords=0;    int countIdentifiers=0; int countNumericals=0; int countPreprocessors = 0; int countOpenningParenthesis = 0;
@@ -10,6 +11,8 @@ int countMultiplyAssign     = 0; int countDecrement          = 0; int countLessT
 
 static void multiLineComment(void);
 %}
+
+
 whitespace	[ \n\t\r]
 preprocessor    "#include <"{letter}+(\.{letter}*)?>
 comment         "//".*
