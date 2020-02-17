@@ -1,7 +1,7 @@
 #include <stdio.h>
 int main()
 {
-    int array[100], search, c, n;
+    int 2array[100], search, c, n;
  
     printf("Enter the number of elements in array\n");
     scanf("%d", &n);
@@ -34,7 +34,7 @@ int main()
         scanf("%lf", &number);
         sum += number;
     }
-    while(number != 0.0);
+    while (number != 0.0);
 
     printf("Sum = %.2lf",sum);
     
@@ -59,7 +59,7 @@ int main()
     printf("Enter a positive integer: ");
     scanf("%d", &num);
     // for loop terminates when n is less than count
-    for(count = 1; count <= num; ++count)
+    for (count = 1; count <= num; ++count)
     {
         sum += count;
     }

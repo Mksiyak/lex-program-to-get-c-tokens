@@ -1,5 +1,20 @@
 %{ 
-int count = 0; 
+int countkeywords = 0; 
+int countwhitespaces = 0; 
+int countsinglecomments = 0; 
+int countmultilinecomments = 0;
+int counterrors = 0;
+int countpreprocessorscommands = 0;
+int countfunctions = 0;
+int countstring = 0;
+int countidentifier = 0;
+int countnumbers = 0;
+int countopeningbrackets = 0;
+int countclosingbrackets = 0;
+int countcomma = 0;
+int countsemicolon=0;
+int countoperator=0;
+int countshorthands = 0;
 %}
 
 whitespace	[ \n\t\r]
@@ -9,65 +24,69 @@ letter		[a-zA-Z_]
 digit		[0-9]
 stringLiteral {letter}?\"(\\.|[^\\"])*\"
 identifier {letter}({letter}|{digit})*
-functiuon {identifier}?(.*)
+functiuon {identifier}\(.*\)
 keyword "auto"|"double"|"int"|"struct"|"break"|"else"|"long"|"switch"|"case"|"enum"|"register"|"typedef"|"char"|"extern"|"return"|"union"|"const"|"float"|"short"|"unsigned"|"continue"|"for"|"signed"|"void"|"default"|"goto"|"sizeof"|"volatile"|"do"|"if"|"static"|"while"
-
+mlinecomment \/\*.*\*\/
+invalid {digit}+{letter}+
 %%
-{whitespace} {/*skip white space*/}
 
-{comment}       {/*skip comments*/}
+{whitespace} {countwhitespaces++;/*skip white space*/}
 
-functiuon     {printf("function: %s\n",yytext);}
+{comment}       {printf("comment : %s\n",yytext);countsinglecomments++;}
 
-{preprocessor} {printf("\tpreprocessor: %s\n",yytext);}
+{mlinecomment} {printf("multiline comment : %s\n",yytext);countmultilinecomments++;}
 
-{stringLiteral} {printf("\t stringLiteral: %s\n",yytext);}
+{invalid}   {printf("invalid identifiers : %s\n",yytext);counterrors++;}
 
-{keyword} {printf("\tkeyword: %s\n",yytext);}
+{keyword} {printf("\tkeyword: %s\n",yytext);countkeywords++;}
 
-identifier {printf("identifier(variable): %s\n",yytext);}
+{functiuon}    {printf("function: %s\n",yytext);countfunctions++;}
 
-{digit}*|{digit}*"."{digit}*	{printf("numericle(constant): %s\n",yytext);}
+{preprocessor} {printf("\tpreprocessor: %s\n",yytext);countpreprocessorscommands++;}
 
-"("					{printf("opening parenthsis\n");}
+{stringLiteral} {printf("\t stringLiteral: %s\n",yytext);countstring++;}
 
-")"					{printf("closing parenthsis\n");}
+{identifier} {printf("identifier(variable): %s\n",yytext);countidentifier++;}
 
-("{"|"<%")			{printf("opening flowerbrackets\n");}
+{digit}*|{digit}*"."{digit}*	{printf("numericle(constant): %s\n",yytext);countnumbers++;}
 
-("}"|"%>")          {printf("closing flowerbrackets\n");}
+"("					{printf("opening parenthsis\n");countopeningbrackets++;}
 
-("["|"<:")			{printf("opening squrebrackets\n");} 
+")"					{printf("closing parenthsis\n");countclosingbrackets++;}
 
-("]"|":>")			{printf("closing squrebrackets\n");}
+"{"		{printf("opening flowerbrackets\n");countopeningbrackets++;}
 
-","				    {printf("delimeter (,)\n");}
+"}"          {printf("closing flowerbrackets\n");countclosingbrackets++;}
 
-";"                 {printf("semicolon (;)\n");}
+"["			{printf("opening squrebrackets\n");countopeningbrackets++;} 
 
-"&"				    {printf("betwise operator (&)\n");}
+"]"			{printf("closing squrebrackets\n");countclosingbrackets++;}
 
-"="					{printf("assign operator\n");}
+","				    {printf("delimeter (,)\n");countcomma++;}
 
-"<"					{printf("relational operator (<)\n");}
+";"                 {printf("semicolon (;)\n");countsemicolon++;}
 
-"++"				{printf("unery operator (++)\n");}
+"&"				    {printf("betwise operator (&)\n");countoperator++;}
 
-"=="				{printf("relational operator (is equal)\n");}
+"="					{printf("assign operator\n");countoperator++;}
 
-"+"					{printf("operator (+)\n");}
+"<"					{printf("relational operator (<)\n");countoperator++;}
 
-"+="				{printf("shorthand (+=)\n");}
+"++"				{printf("unery operator (++)\n");countoperator++;}
 
-"!="				{printf("relational operator not equal (!=)\n");}
+"=="				{printf("relational operator (is equal)\n");countoperator++;}
 
-">"					{printf("relational operator (>)\n");}
+"+"					{printf("operator (+)\n");countoperator++;}
 
-"*="				{printf("shorthand (*=)\n");}
+("+="|"-="|"*="|"/=")		{printf("shorthand : %s \n",yytext);countshorthands++;}
 
-"--"				{printf("unery decrement operator(--)\n");}
+"!="				{printf("relational operator not equal (!=)\n");countoperator++;}
 
-"<="				{printf("relational operator (<=)\n");}
+">"					{printf("relational operator (>)\n");countoperator++;}
+
+"--"				{printf("unery decrement operator(--)\n");countoperator++;}
+
+"<="				{printf("relational operator (<=)\n");countoperator++;}
 
 %% 
   
@@ -79,10 +98,24 @@ int main(){
  scanf("%s",filename); 
  fp = fopen(filename,"r"); 
  yyin = fp; 
-  
-yylex(); 
-printf("\nNumber of Captial letters " 
-      "in the given input - %d\n", count); 
-  
+yylex();
+
+printf("\n\n\ncounting\n\n\n");
+printf("\nkeywords : %d",countkeywords);
+printf("\nwhite spaces : %d",countwhitespaces);
+printf("\nsingle line comments : %d",countsinglecomments);
+printf("\nmulti line comment : %d",countmultilinecomments);
+printf("\nerrors : %d",counterrors);
+printf("\npreprocessor commands : %d",countpreprocessorscommands);
+printf("\nfunctions : %d",countfunctions);
+printf("\nstrings : %d",countstring);
+printf("\nidentifier : %d",countidentifier);
+printf("\nnumbers : %d",countnumbers);
+printf("\nopening brackets : %d",countopeningbrackets);
+printf("\nclosing brackets : %d",countclosingbrackets);
+printf("\ncomma : %d",countcomma);
+printf("\nsemicolon : %d",countsemicolon);
+printf("\noperator : %d",countoperator);
+printf("\nshorthand : %d",countshorthands);
 return 0; 
 } 
